@@ -1,6 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const childProcess = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import childProcess from 'child_process';
 
 const rootPath = process.cwd();
 

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Silvie JS ORM",
   "typings": "bootstrap/index.d.ts",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "build": "node scripts/build.js"
@@ -25,6 +26,7 @@
     "change-case": "^5.4.4",
     "lodash.clonedeep": "^4.5.0",
     "mysql": "^2.18.1",
+    "mysql2": "^3.9.7",
     "pluralize": "^8.0.0"
   },
   "devDependencies": {
