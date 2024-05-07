@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"target": "esnext",
+		"moduleResolution": "node",
+		"outDir": "./lib",
+		"sourceMap": true,
+		"experimentalDecorators": true,
+		"emitDeclarationOnly": true,
+		"baseUrl": ".",
+		"skipLibCheck": true
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "lib"]
+}

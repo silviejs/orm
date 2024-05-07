@@ -1,0 +1,39 @@
+{
+  "name": "@silviejs/orm",
+  "version": "1.0.0",
+  "description": "Silvie JS ORM",
+  "typings": "bootstrap/index.d.ts",
+  "main": "index.js",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "keywords": [
+    "orm",
+    "mysql",
+    "database"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silviejs/orm.git"
+  },
+  "homepage": "https://silviejs.org",
+  "author": "Hossein Maktoobian",
+  "license": "MIT",
+  "dependencies": {
+    "@types/lodash.clonedeep": "^4.5.9",
+    "chalk": "^4.1.2",
+    "change-case": "^5.4.4",
+    "lodash.clonedeep": "^4.5.0",
+    "mysql": "^2.18.1",
+    "pluralize": "^8.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.1",
+    "@babel/core": "^7.24.4",
+    "@babel/plugin-proposal-decorators": "^7.24.1",
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-typescript": "^7.24.1",
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}
