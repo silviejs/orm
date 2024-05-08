@@ -1,11 +1,11 @@
 import QueryBuilder from '../../builders/query';
 
-export declare type TOperator = '=' | '!=' | '>' | '>=' | '<' | '<=';
-export declare type TBaseValue = string | number | boolean;
-export declare type TValue = string | number | boolean | TBaseValue[];
-export declare type TColumn = string;
-export declare type TTable = string;
-export declare type TConditionType =
+export type TOperator = '=' | '!=' | '>' | '>=' | '<' | '<=';
+export type TBaseValue = string | number | boolean;
+export type TValue = string | number | boolean | TBaseValue[];
+export type TColumn = string;
+export type TTable = string;
+export type TConditionType =
 	| 'group'
 	| 'value'
 	| 'column'

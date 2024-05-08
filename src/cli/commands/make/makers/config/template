@@ -1,0 +1,25 @@
+import Database from '@silviejs/orm';
+
+new Database({
+	type: 'mysql',
+
+	host: 'localhost',
+	port: '3306',
+
+	database: 'test',
+	username: 'root',
+	password: '',
+
+	mysql: {
+		connectionLimit: 10,
+		dateStrings: true,
+		multipleStatements: true,
+		charset: 'utf8mb4',
+	},
+}, 'default');
+
+export default {
+    migrationsPath: 'src/database/migrations',
+    seedersPath: 'src/database/seeders',
+    modelsPath: 'src/models',
+};

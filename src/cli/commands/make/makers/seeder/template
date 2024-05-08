@@ -1,0 +1,9 @@
+class CLASS_NAME {
+	static order = 1;
+
+	static async seed() {
+		// Seed the table here
+	}
+};
+
+export default CLASS_NAME;

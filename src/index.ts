@@ -1,17 +1,96 @@
-import Table from './migration/table';
-import IDatabaseDriver from './driver';
 import drivers from './driver/drivers';
-import { TBaseValue, TColumn } from './builders/condition';
+
+import MySQLDriver, {MySQLTypes, ReverseMySQLTypes} from './driver/drivers/mysql';
+import Model from './model/index';
+import LineStringData from './driver/drivers/mysql/datatypes/spatial/linestring';
+import MultiPolygonData from './driver/drivers/mysql/datatypes/spatial/multipolygon';
+import SpatialData from './driver/drivers/mysql/datatypes/spatial';
+import MultiPointData from './driver/drivers/mysql/datatypes/spatial/multipoint';
+import PolygonData from './driver/drivers/mysql/datatypes/spatial/polygon';
+import PointData from './driver/drivers/mysql/datatypes/spatial/point';
+import MultiLineStringData from './driver/drivers/mysql/datatypes/spatial/multilinestring';
+import HavingConditionBuilder from './builders/condition/having';
+import JoinConditionBuilder from './builders/condition/join';
+import WhereConditionBuilder from './builders/condition/where';
 import QueryBuilder from './builders/query';
-import log from './utils/log';
+import Schema from './migration/schema';
+import Table from './migration/table';
+import Column from './migration/column';
+import ModelQueryBuilder from './model/query_builder';
 
-export class Database {
-	/**
-	 * [SINGLETON] The database instance
-	 * @private
-	 */
-	private static instance: Database;
+import type IDatabaseDriver from './driver';
+import type IConditionBuilder from './builders/condition';
+import type {ICondition} from './builders/condition';
+import type {IOrder, IAliasTable, IGroup, IUnion, IJoin, ISelect} from './builders/query/types';
+import type {IRelation, IConstraintCollection} from './migration/table';
+import type IColumnOptions from './migration/column';
+import type {IModel, IModelRelation} from './model/query_builder';
 
+import type {TModificationResult, TInsertionResult} from './driver';
+import type {TOperator, TBaseValue, TValue, TColumn, TTable} from './builders/condition';
+import type {TConditionType} from './builders/condition';
+import type {TAggregateType} from './builders/query/types';
+import type {TModelHook} from './model';
+
+
+export {
+	MySQLDriver,
+	MySQLTypes,
+	ReverseMySQLTypes,
+	Model,
+	LineStringData,
+	MultiPolygonData,
+	SpatialData,
+	MultiPointData,
+	PolygonData,
+	PointData,
+	MultiLineStringData,
+	HavingConditionBuilder,
+	JoinConditionBuilder,
+	WhereConditionBuilder,
+	QueryBuilder,
+	Schema,
+	Table,
+	Column,
+	ModelQueryBuilder,
+	IDatabaseDriver,
+	IConditionBuilder,
+	ICondition,
+	IOrder,
+	IAliasTable,
+	IGroup,
+	IUnion,
+	IJoin,
+	ISelect,
+	IRelation,
+	IConstraintCollection,
+	IColumnOptions,
+	IModel,
+	IModelRelation,
+	TModificationResult,
+	TInsertionResult,
+	TOperator,
+	TBaseValue,
+	TValue,
+	TColumn,
+	TTable,
+	TConditionType,
+	TAggregateType,
+	TModelHook,
+}
+
+export const DatabaseInstances: Record<string, Database> = {};
+
+export function getInstance(instanceKey: string): Database {
+	const db = DatabaseInstances[instanceKey];
+	if (!db) {
+		throw new Error(`Database Instance '${instanceKey}' Not Found!`);
+	}
+
+	return db;
+}
+
+export default class Database {
 	/**
 	 * The database driver instance
 	 * @private
@@ -27,42 +106,28 @@ export class Database {
 	}
 
 	/**
-	 * [SINGLETON] Disable the constructor
-	 * @private
-	 */
-	// eslint-disable-next-line no-empty-function,no-useless-constructor,@typescript-eslint/no-empty-function
-	private constructor() {}
-
-	/**
-	 * [SINGLETON] Creates a new or returns the existing database instance
-	 */
-	public static getInstance(): Database {
-		if (!Database.instance) {
-			Database.instance = new Database();
-		}
-
-		return Database.instance;
-	}
-
-	/**
 	 * Initializes a database driver based on the given config
 	 */
-	init(config = {} as any): void {
-		const type = config.type || process.env.DB_TYPE;
+	constructor(config = {} as any, instanceKey?: string) {
+		const type = config.type;
 
 		if (type in drivers) {
 			this.privDriver = new drivers[type]({
-				host: config.host || process.env.DB_HOST,
-				port: config.port || process.env.DB_PORT,
+				host: config.host,
+				port: config.port,
 
-				database: config.database || process.env.DB_DATABASE,
-				username: config.username || process.env.DB_USERNAME,
-				password: config.password || process.env.DB_PASSWORD,
+				database: config.database,
+				username: config.username,
+				password: config.password,
 
 				...(config[type] ?? {}),
 			});
 		} else {
-			log.error('Invalid Driver', `'${type}' is not a valid database driver`);
+			throw new Error('Could not initiate database instance');
+		}
+
+		if (instanceKey) {
+			DatabaseInstances[instanceKey] = this;
 		}
 	}
 
@@ -190,5 +255,3 @@ export class Database {
 		this.driver.closeConnection();
 	}
 }
-
-export default Database.getInstance();

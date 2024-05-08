@@ -1,4 +1,4 @@
-export interface ColumnOptions {
+export interface IColumnOptions {
 	primary?: boolean;
 	index?: string | boolean;
 	fullTextIndex?: string | boolean;
@@ -21,9 +21,9 @@ export default class Column {
 
 	size: number;
 
-	options: ColumnOptions;
+	options: IColumnOptions;
 
-	constructor(name: string, type: string, size?: number, options: ColumnOptions = {}) {
+	constructor(name: string, type: string, size?: number, options: IColumnOptions = {}) {
 		this.name = name;
 		this.type = type;
 		this.size = size;

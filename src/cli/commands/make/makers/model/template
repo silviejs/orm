@@ -1,0 +1,7 @@
+import { Model } from '@silviejs/orm';
+
+class CLASS_NAME extends Model {
+	declare id: number;
+}
+
+export default CLASS_NAME;

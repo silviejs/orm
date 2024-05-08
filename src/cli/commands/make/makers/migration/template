@@ -1,0 +1,18 @@
+import { Schema } from '@silviejs/orm';
+
+class CLASS_NAME {
+	static order = 1;
+
+	static async up() {
+		await Schema.create('TABLE_NAME', (table) => {
+			table.id();
+			table.timestamps();
+		});
+	}
+
+	static async down() {
+		await Schema.dropIfExists('TABLE_NAME');
+	}
+};
+
+export default CLASS_NAME;

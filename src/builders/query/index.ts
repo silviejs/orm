@@ -13,10 +13,11 @@ import { IOrder, IGroup, IUnion, IJoin, ISelect, IAliasTable, TAggregateType } f
 import WhereConditionBuilder from '../../builders/condition/where';
 import HavingConditionBuilder from '../../builders/condition/having';
 import JoinConditionBuilder from '../../builders/condition/join';
-import Database from '../..';
+import {getInstance} from '../../index';
 
 export default class QueryBuilder {
 	options: {
+		instanceKey: string,
 		table?: TTable;
 		aliasTable?: IAliasTable;
 
@@ -60,8 +61,10 @@ export default class QueryBuilder {
 		alongQueries: QueryBuilder[];
 	};
 
-	constructor(tableName?: string) {
+	constructor(tableName?: string, instanceKey: string = 'default') {
 		this.options = {
+			instanceKey,
+
 			select: [],
 			where: [],
 			having: [],
@@ -113,7 +116,7 @@ export default class QueryBuilder {
 	 * Return all matching rows of this query
 	 */
 	async get(): Promise<any> {
-		return this.options.processData(await Database.select(this), this);
+		return this.options.processData(await getInstance(this.options.instanceKey).select(this), this);
 	}
 
 	/**
@@ -123,14 +126,14 @@ export default class QueryBuilder {
 		const qb = this.clone();
 		qb.options.limit = 1;
 
-		return this.options.processData(await Database.select(qb), this)[0] || null;
+		return this.options.processData(await getInstance(this.options.instanceKey).select(qb), this)[0] || null;
 	}
 
 	/**
 	 * Query database to see if there are any records matching this query
 	 */
 	exists(): Promise<boolean> {
-		return Database.exists(this);
+		return getInstance(this.options.instanceKey).exists(this);
 	}
 
 	/**
@@ -179,7 +182,7 @@ export default class QueryBuilder {
 	 * Return the count of records matching this query
 	 */
 	count(): Promise<number> {
-		return Database.count(this);
+		return getInstance(this.options.instanceKey).count(this);
 	}
 
 	/**
@@ -191,7 +194,7 @@ export default class QueryBuilder {
 			throw new Error("Column is not specified for 'average' method");
 		}
 
-		return Database.average(this, column);
+		return getInstance(this.options.instanceKey).average(this, column);
 	}
 
 	/**
@@ -203,7 +206,7 @@ export default class QueryBuilder {
 			throw new Error("Column is not specified for 'sum' method");
 		}
 
-		return Database.sum(this, column);
+		return getInstance(this.options.instanceKey).sum(this, column);
 	}
 
 	/**
@@ -215,7 +218,7 @@ export default class QueryBuilder {
 			throw new Error("Column is not specified for 'min' method");
 		}
 
-		return Database.min(this, column);
+		return getInstance(this.options.instanceKey).min(this, column);
 	}
 
 	/**
@@ -227,7 +230,7 @@ export default class QueryBuilder {
 			throw new Error("Column is not specified for 'max' method");
 		}
 
-		return Database.max(this, column);
+		return getInstance(this.options.instanceKey).max(this, column);
 	}
 
 	/**
@@ -243,7 +246,7 @@ export default class QueryBuilder {
 		this.options.insert = data;
 		this.options.ignoreDuplicates = ignore;
 
-		return Database.insert(this).then((results) => {
+		return getInstance(this.options.instanceKey).insert(this).then((results) => {
 			delete this.options.insert;
 			delete this.options.ignoreDuplicates;
 
@@ -268,7 +271,7 @@ export default class QueryBuilder {
 		this.options.update = data;
 		this.options.silentUpdate = silent;
 
-		return Database.update(this).then((results) => {
+		return getInstance(this.options.instanceKey).update(this).then((results) => {
 			delete this.options.update;
 			delete this.options.silentUpdate;
 
@@ -294,7 +297,7 @@ export default class QueryBuilder {
 		this.options.bulkUpdateKeys = keys;
 		this.options.silentUpdate = silent;
 
-		return Database.bulkUpdate(this).then((results) => {
+		return getInstance(this.options.instanceKey).bulkUpdate(this).then((results) => {
 			delete this.options.bulkUpdateData;
 			delete this.options.bulkUpdateKeys;
 			delete this.options.silentUpdate;
@@ -312,7 +315,7 @@ export default class QueryBuilder {
 			return this.softDelete();
 		}
 
-		return Database.delete(this);
+		return getInstance(this.options.instanceKey).delete(this);
 	}
 
 	/**
@@ -336,7 +339,7 @@ export default class QueryBuilder {
 			throw new Error('Soft delete timestamp is not specified in this query builder');
 		}
 
-		return Database.softDelete(this);
+		return getInstance(this.options.instanceKey).softDelete(this);
 	}
 
 	/**
@@ -351,7 +354,7 @@ export default class QueryBuilder {
 			throw new Error('Soft delete timestamp is not specified in this query builder');
 		}
 
-		return Database.restore(this);
+		return getInstance(this.options.instanceKey).restore(this);
 	}
 
 	/**

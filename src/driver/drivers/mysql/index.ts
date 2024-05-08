@@ -1,5 +1,5 @@
 import mysql from 'mysql2';
-import IDatabaseDriver, { IInsertionResult, IModificationResult } from '../../../driver';
+import IDatabaseDriver, { TInsertionResult, TModificationResult } from '../../../driver';
 import Table from '../../../migration/table';
 import Column from '../../../migration/column';
 import QueryBuilder from '../../../builders/query';
@@ -778,7 +778,7 @@ export default class MySQLDriver implements IDatabaseDriver {
 		return [query, params];
 	}
 
-	async insert(queryBuilder: QueryBuilder): Promise<IInsertionResult> {
+	async insert(queryBuilder: QueryBuilder): Promise<TInsertionResult> {
 		const result = await this.execute(...MySQLDriver.compileInsert(queryBuilder));
 		return [result.insertId, result.affectedRows];
 	}
@@ -826,7 +826,7 @@ export default class MySQLDriver implements IDatabaseDriver {
 		return [query, params];
 	}
 
-	async update(queryBuilder: QueryBuilder): Promise<IModificationResult> {
+	async update(queryBuilder: QueryBuilder): Promise<TModificationResult> {
 		const result = await this.execute(...MySQLDriver.compileUpdate(queryBuilder));
 		return [result.affectedRows, result.changedRows];
 	}
@@ -876,7 +876,7 @@ export default class MySQLDriver implements IDatabaseDriver {
 		return [query, params];
 	}
 
-	async bulkUpdate(queryBuilder: QueryBuilder): Promise<IModificationResult> {
+	async bulkUpdate(queryBuilder: QueryBuilder): Promise<TModificationResult> {
 		const result = await this.execute(...MySQLDriver.compileBulkUpdate(queryBuilder));
 		return [result.affectedRows, result.changedRows];
 	}
@@ -894,7 +894,7 @@ export default class MySQLDriver implements IDatabaseDriver {
 		return [query, params];
 	}
 
-	async delete(queryBuilder: QueryBuilder): Promise<IModificationResult> {
+	async delete(queryBuilder: QueryBuilder): Promise<TModificationResult> {
 		const result = await this.execute(...MySQLDriver.compileDelete(queryBuilder));
 		return [result.affectedRows, result.changedRows];
 	}
@@ -916,7 +916,7 @@ export default class MySQLDriver implements IDatabaseDriver {
 		return [query, params];
 	}
 
-	async softDelete(queryBuilder: QueryBuilder): Promise<IModificationResult> {
+	async softDelete(queryBuilder: QueryBuilder): Promise<TModificationResult> {
 		if (!queryBuilder.options.useSoftDeletes) {
 			throw new Error('Soft deletes are not enabled for this query builder');
 		}
@@ -946,7 +946,7 @@ export default class MySQLDriver implements IDatabaseDriver {
 		return [query, params];
 	}
 
-	async restore(queryBuilder: QueryBuilder): Promise<IModificationResult> {
+	async restore(queryBuilder: QueryBuilder): Promise<TModificationResult> {
 		if (!queryBuilder.options.useSoftDeletes) {
 			throw new Error('Soft deletes are not enabled for this query builder');
 		}

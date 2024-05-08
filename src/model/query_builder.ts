@@ -16,15 +16,17 @@ export interface IModel {
 	save(): Promise<number>;
 }
 
-export type IModelRelation = {
+export interface IModelRelation {
 	type: 'HasMany' | 'HasOne' | 'BelongsToMany' | 'BelongsTo';
 	count: 'one' | 'many';
 	model: any;
 	localKey: string | string[];
 	remoteKey: string | string[];
-};
+}
 
 export default class ModelQueryBuilder {
+	protected static instanceKey = 'default';
+
 	protected static tableName = '';
 
 	protected static primaryKey: string | string[] = 'id';
@@ -249,7 +251,7 @@ export default class ModelQueryBuilder {
 	 * Configures a query builder to match this model table and configuration
 	 */
 	static get baseQueryBuilder(): QueryBuilder {
-		const queryBuilder = new QueryBuilder(this.table).extend({
+		const queryBuilder = new QueryBuilder(this.table, this.instanceKey).extend({
 			processData: this.processResults.bind(this),
 
 			useTimestamps: this.useTimestamps,
